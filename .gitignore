@@ -1,0 +1,16 @@
+# Java / Spring Boot target files
+backend/target/
+*.class
+*.jar
+*.war
+
+# Node / React files
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+
+# IDE and System files
+.idea/
+.vscode/
+*.iml
+.DS_Store
