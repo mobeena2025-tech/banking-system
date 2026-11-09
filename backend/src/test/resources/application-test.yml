@@ -1,0 +1,4 @@
+app:
+  admin:
+    email: admin@test.local
+    password: AdminPass123
