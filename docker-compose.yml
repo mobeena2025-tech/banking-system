@@ -1,0 +1,36 @@
+services:
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: smart_banking
+      MYSQL_USER: bank
+      MYSQL_PASSWORD: ${DB_PASSWORD:-bankpass}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpass}
+    volumes: ["db-data:/var/lib/mysql"]
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 20
+
+  backend:
+    build: ./backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:mysql://db:3306/smart_banking
+      DB_USERNAME: bank
+      DB_PASSWORD: ${DB_PASSWORD:-bankpass}
+      JWT_SECRET: ${JWT_SECRET:-change-this-to-a-long-random-string-0123456789}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@bank.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-Admin12345}
+      CORS_ORIGINS: http://localhost:3000
+    ports: ["8080:8080"]
+
+  frontend:
+    build: ./frontend
+    depends_on: [backend]
+    ports: ["3000:80"]
+
+volumes:
+  db-data:
